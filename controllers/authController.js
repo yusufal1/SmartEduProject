@@ -27,7 +27,8 @@ exports.loginUser = async (req, res) => {
     }
     const same = await bcrypt.compare(password, user.password);
     if (same) {
-      res.status(200).send("You are logged in");
+      req.session.userID = user._id
+      res.status(200).redirect('/')
     }
   } catch (error) {
     res.status(400).json({
@@ -36,3 +37,9 @@ exports.loginUser = async (req, res) => {
     });
   }
 };
+
+exports.logoutUser = (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/')
+  })
+}
